@@ -1,0 +1,15 @@
+{
+  "name": "やることクエスト",
+  "short_name": "やることクエスト",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#7c5cfc",
+  "theme_color": "#7c5cfc",
+  "icons": [
+    {
+      "src": "https://em-content.zobj.net/source/apple/391/star_2b50.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
