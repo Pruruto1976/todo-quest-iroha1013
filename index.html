@@ -95,20 +95,28 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .rwd-status.approved{background:#e8fdf5;color:var(--green);}
 .rwd-btn{border:none;border-radius:10px;padding:8px 13px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;background:var(--primary-light);color:var(--primary);}
 .rwd-btn:disabled{opacity:.35;cursor:not-allowed;}
-.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+
+/* ── CALENDAR ── */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;}
 .cal-nav-btn{background:none;border:none;font-size:22px;cursor:pointer;padding:4px 10px;border-radius:10px;color:var(--primary);}
 .cal-month{font-size:17px;font-weight:900;}
-.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:14px;}
+/* カレンダーは画面幅いっぱいに、paddingを0にして余白をなくす */
+.cal-wrap{margin:0 -14px;padding:0 8px;}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:14px;width:100%;}
 .cal-dow{text-align:center;font-size:11px;font-weight:700;color:var(--muted);padding-bottom:4px;}
-.cal-day{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:4px;cursor:pointer;font-size:12px;font-weight:700;position:relative;background:transparent;border:none;font-family:'Nunito',sans-serif;color:var(--text);}
+.cal-dow.sun{color:#ff6b9d;}
+.cal-day{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding-top:3px;cursor:pointer;font-size:12px;font-weight:700;position:relative;background:transparent;border:none;font-family:'Nunito',sans-serif;color:var(--text);overflow:hidden;min-width:0;}
 .cal-day.other-month{color:#ccc;}
 .cal-day.today{background:var(--primary);color:#fff !important;box-shadow:0 3px 10px rgba(124,92,252,.4);}
 .cal-day.selected:not(.today){background:var(--primary-light);color:var(--primary);}
 .cal-day.has-mission::after{content:'🔥';position:absolute;top:-2px;right:-2px;font-size:8px;}
-.cal-tasks-preview{display:flex;flex-direction:column;gap:1px;width:100%;margin-top:2px;}
-.cal-task-dot{font-size:7px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;color:var(--muted);background:var(--primary-light);border-radius:3px;padding:1px 2px;}
+.cal-day.sun-col{color:#ff6b9d;}
+.cal-day.sun-col.today{color:#fff !important;}
+.cal-tasks-preview{display:flex;flex-direction:column;gap:1px;width:100%;margin-top:2px;padding:0 1px;}
+.cal-task-dot{font-size:6px;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:center;color:var(--muted);background:var(--primary-light);border-radius:2px;padding:1px;}
 .cal-task-dot.is-schedule{background:var(--schedule-light);color:var(--schedule);}
 .cal-day.today .cal-task-dot{background:rgba(255,255,255,.25);color:#fff;}
+
 .day-header{font-size:15px;font-weight:900;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
 .day-header span{color:var(--primary);}
 .add-schedule-btn{background:var(--schedule-light);border:none;border-radius:10px;padding:7px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;color:var(--schedule);cursor:pointer;}
@@ -118,8 +126,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .sc-name{font-size:14px;font-weight:700;color:var(--schedule);}
 .sc-time{font-size:11px;color:var(--schedule);opacity:.8;margin-top:2px;}
 .sc-del{background:none;border:none;font-size:16px;cursor:pointer;color:#aaa;}
-
-/* REPEAT GROUP CARD */
 .rg-card{background:#fff;border-radius:var(--radius);padding:14px;margin-bottom:10px;box-shadow:0 2px 10px rgba(0,0,0,.05);}
 .rg-top{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
 .rg-icon{font-size:24px;}
@@ -129,7 +135,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .rg-actions{display:flex;gap:6px;}
 .rg-edit-btn{background:var(--primary-light);border:none;border-radius:8px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:var(--primary);cursor:pointer;}
 .rg-del-btn{background:#fee;border:none;border-radius:8px;padding:6px 10px;font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;color:var(--red);cursor:pointer;}
-
 .parent-section{margin-bottom:20px;}
 .parent-ttl{font-size:16px;font-weight:900;margin-bottom:10px;}
 .approval-card{background:#fff;border-radius:var(--radius);padding:14px;margin-bottom:9px;box-shadow:0 2px 10px rgba(0,0,0,.05);display:flex;align-items:center;gap:12px;}
@@ -256,10 +261,11 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
       <div class="cal-month" id="cal-month-lbl"></div>
       <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
     </div>
-    <div class="cal-grid" id="cal-grid"></div>
+    <div class="cal-wrap">
+      <div class="cal-grid" id="cal-grid"></div>
+    </div>
     <div class="day-header" id="day-header"></div>
     <div id="day-items-list"></div>
-    <!-- 繰り返しグループ管理（保護者のみ表示） -->
     <div id="repeat-group-section" style="display:none">
       <div class="sec-ttl">🔁 繰り返しタスク管理</div>
       <div id="repeat-group-list"></div>
@@ -306,7 +312,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 <div class="overlay" id="add-overlay" onclick="closeOverlayOut(event,'add-overlay')">
   <div class="modal">
     <div class="modal-handle"></div>
-    <div class="modal-ttl" id="add-modal-ttl">タスクを追加 ✏️</div>
+    <div class="modal-ttl">タスクを追加 ✏️</div>
     <div class="fg"><label class="fl">タスク名</label><input class="fi" id="inp-name" type="text" placeholder="例: 漢字ドリル10ページ" maxlength="40"></div>
     <div class="fg"><label class="fl">カテゴリ</label><div class="cat-sel-row" id="cat-sel"></div></div>
     <div class="fg"><label class="fl">ポイント（完了時にゲット）</label><input class="fi" id="inp-pts" type="number" value="10" min="1" max="200"></div>
@@ -325,7 +331,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
         <div class="fg" style="margin-bottom:0"><label class="fl">💸 未完了ペナルティ（pt）</label><input class="fi" id="inp-pen" type="number" value="20" min="1" max="500"></div>
       </div>
     </div>
-    <div class="fg" id="repeat-toggle-wrap">
+    <div class="fg">
       <div class="toggle-row">
         <div><div class="toggle-label">🔁 繰り返し設定</div><div class="toggle-sub">毎日・曜日指定で期間登録</div></div>
         <button class="toggle" id="repeat-toggle" onclick="toggleRepeat()"></button>
@@ -341,13 +347,13 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
         <div id="dow-select-wrap" style="display:none;">
           <label class="fl">繰り返す曜日</label>
           <div class="dow-row" id="dow-row">
-            <button class="dow-btn" onclick="toggleDow(0)">日</button>
             <button class="dow-btn" onclick="toggleDow(1)">月</button>
             <button class="dow-btn" onclick="toggleDow(2)">火</button>
             <button class="dow-btn" onclick="toggleDow(3)">水</button>
             <button class="dow-btn" onclick="toggleDow(4)">木</button>
             <button class="dow-btn" onclick="toggleDow(5)">金</button>
             <button class="dow-btn" onclick="toggleDow(6)">土</button>
+            <button class="dow-btn" onclick="toggleDow(0)">日</button>
           </div>
         </div>
         <div class="fg" style="margin-top:10px"><label class="fl">開始日</label><input class="fi" id="inp-repeat-start" type="date"></div>
@@ -355,11 +361,11 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
       </div>
     </div>
     <div class="fg" id="single-date-wrap"><label class="fl">日付</label><input class="fi" id="inp-date" type="date"></div>
-    <button class="sub-btn" id="add-task-btn" onclick="addTask()">追加する！</button>
+    <button class="sub-btn" onclick="addTask()">追加する！</button>
   </div>
 </div>
 
-<!-- EDIT TASK MODAL（個別編集） -->
+<!-- EDIT TASK MODAL -->
 <div class="overlay" id="edit-overlay" onclick="closeOverlayOut(event,'edit-overlay')">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -375,7 +381,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
   </div>
 </div>
 
-<!-- EDIT REPEAT GROUP MODAL（繰り返し一括編集） -->
+<!-- EDIT REPEAT GROUP MODAL -->
 <div class="overlay" id="rg-edit-overlay" onclick="closeOverlayOut(event,'rg-edit-overlay')">
   <div class="modal">
     <div class="modal-handle"></div>
@@ -427,7 +433,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
-import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc, getDoc, writeBatch, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc, getDoc, writeBatch } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
 const firebaseConfig = {
@@ -455,6 +461,8 @@ const CATS = [
   {id:'life', label:'生活',emoji:'🌟',color:'#ff6b9d'},
   {id:'other',label:'その他',emoji:'💫',color:'#a78bfa'},
 ];
+// 月曜始まりの曜日ラベル（0=月,1=火,...,6=日）
+const DOW_LABELS_MON = ['月','火','水','木','金','土','日'];
 
 const app  = initializeApp(firebaseConfig);
 const db   = getFirestore(app);
@@ -472,8 +480,9 @@ function todayStr(){const d=new Date();return `${d.getFullYear()}-${String(d.get
 function getCat(id){return CATS.find(c=>c.id===id)||CATS[4];}
 function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function getUid(){return isParent&&childUid?childUid:currentUser.uid;}
+// 月曜始まりの曜日インデックス（月=0, 火=1, ... 日=6）
+function monFirstDow(date){return (date.getDay()+6)%7;}
 
-// ── NOTIF ──
 function showBanner(msg,type='green'){
   const el=document.getElementById('notif-banner');
   el.textContent='🔔 '+msg;
@@ -482,7 +491,6 @@ function showBanner(msg,type='green'){
   el._t=setTimeout(()=>el.classList.remove('show'),4000);
 }
 
-// ── AUTH ──
 document.getElementById('login-loading').style.display='none';
 document.getElementById('login-btn').style.display='flex';
 
@@ -537,85 +545,38 @@ onAuthStateChanged(auth,async user=>{
 
 function startListeners(){
   const uid=getUid();
-  unsubTasks=onSnapshot(collection(db,'users',uid,'tasks'),snap=>{
-    tasks=snap.docs.map(d=>({id:d.id,...d.data()}));
-    checkPenalties();renderAll();
-  });
-  unsubPoints=onSnapshot(doc(db,'users',uid,'meta','points'),snap=>{
-    points=snap.exists()?(snap.data().value||0):0;
-    adjAmount=points;
-    document.getElementById('adj-val').textContent=points;
-    renderAll();
-  });
-  unsubTrackers=onSnapshot(collection(db,'users',uid,'trackers'),snap=>{
-    trackers=snap.docs.map(d=>({id:d.id,...d.data()}));
-    renderAll();
-  });
-  unsubRequests=onSnapshot(collection(db,'users',uid,'rewardRequests'),snap=>{
-    rewardRequests=snap.docs.map(d=>({id:d.id,...d.data()}));
-    renderAll();
-  });
-  unsubSchedules=onSnapshot(collection(db,'users',uid,'schedules'),snap=>{
-    schedules=snap.docs.map(d=>({id:d.id,...d.data()}));
-    renderAll();
-  });
-  // 通知リスナー
+  unsubTasks=onSnapshot(collection(db,'users',uid,'tasks'),snap=>{tasks=snap.docs.map(d=>({id:d.id,...d.data()}));checkPenalties();renderAll();});
+  unsubPoints=onSnapshot(doc(db,'users',uid,'meta','points'),snap=>{points=snap.exists()?(snap.data().value||0):0;adjAmount=points;document.getElementById('adj-val').textContent=points;renderAll();});
+  unsubTrackers=onSnapshot(collection(db,'users',uid,'trackers'),snap=>{trackers=snap.docs.map(d=>({id:d.id,...d.data()}));renderAll();});
+  unsubRequests=onSnapshot(collection(db,'users',uid,'rewardRequests'),snap=>{rewardRequests=snap.docs.map(d=>({id:d.id,...d.data()}));renderAll();});
+  unsubSchedules=onSnapshot(collection(db,'users',uid,'schedules'),snap=>{schedules=snap.docs.map(d=>({id:d.id,...d.data()}));renderAll();});
   if(isParent&&childUid){
     onSnapshot(doc(db,'users',childUid,'notifications','toParent'),snap=>{
-      if(snap.exists()&&!snap.data().read){
-        showBanner(snap.data().message,'gold');
-        updateDoc(doc(db,'users',childUid,'notifications','toParent'),{read:true});
-      }
+      if(snap.exists()&&!snap.data().read){showBanner(snap.data().message,'gold');updateDoc(doc(db,'users',childUid,'notifications','toParent'),{read:true});}
     });
   }
   if(!isParent){
     onSnapshot(doc(db,'users',currentUser.uid,'notifications','toChild'),snap=>{
-      if(snap.exists()&&!snap.data().read){
-        showBanner(snap.data().message,'green');
-        renderAll();
-        updateDoc(doc(db,'users',currentUser.uid,'notifications','toChild'),{read:true});
-      }
+      if(snap.exists()&&!snap.data().read){showBanner(snap.data().message,'green');renderAll();updateDoc(doc(db,'users',currentUser.uid,'notifications','toChild'),{read:true});}
     });
   }
 }
 
-// ── PENALTY ──
 function checkPenalties(){
   const now=new Date(),today=todayStr();
   tasks.forEach(t=>{
     if(!t.mission||t.done||t.penalized)return;
-    const expired=(t.date&&t.date<today)||(t.date===today&&t.time&&(()=>{
-      const[hh,mm]=t.time.split(':').map(Number);
-      const dl=new Date();dl.setHours(hh,mm,0,0);return now>dl;
-    })());
-    if(expired){
-      const pen=t.penalty||20,uid=getUid();
-      updateDoc(doc(db,'users',uid,'tasks',t.id),{penalized:true});
-      setDoc(doc(db,'users',uid,'meta','points'),{value:Math.max(0,points-pen)});
-      penaltyQueue.push({name:t.name,pen});
-    }
+    const expired=(t.date&&t.date<today)||(t.date===today&&t.time&&(()=>{const[hh,mm]=t.time.split(':').map(Number);const dl=new Date();dl.setHours(hh,mm,0,0);return now>dl;})());
+    if(expired){const pen=t.penalty||20,uid=getUid();updateDoc(doc(db,'users',uid,'tasks',t.id),{penalized:true});setDoc(doc(db,'users',uid,'meta','points'),{value:Math.max(0,points-pen)});penaltyQueue.push({name:t.name,pen});}
   });
   if(penaltyQueue.length>0)showNextPenalty();
 }
-function showNextPenalty(){
-  if(!penaltyQueue.length)return;
-  const{name,pen}=penaltyQueue.shift();
-  document.getElementById('pen-task-name').textContent=name;
-  document.getElementById('pen-amount').textContent=`-${pen}pt`;
-  document.getElementById('pen-overlay').classList.add('open');
-}
-window.closePenalty=function(){
-  document.getElementById('pen-overlay').classList.remove('open');
-  if(penaltyQueue.length>0)setTimeout(showNextPenalty,400);
-};
+function showNextPenalty(){if(!penaltyQueue.length)return;const{name,pen}=penaltyQueue.shift();document.getElementById('pen-task-name').textContent=name;document.getElementById('pen-amount').textContent=`-${pen}pt`;document.getElementById('pen-overlay').classList.add('open');}
+window.closePenalty=function(){document.getElementById('pen-overlay').classList.remove('open');if(penaltyQueue.length>0)setTimeout(showNextPenalty,400);};
 
-// ── RENDER ──
 function renderAll(){renderHeader();renderHome();renderTasks();renderRewards();renderCalendar();renderDayItems();renderRepeatGroups();renderParent();}
 
-function renderHeader(){
-  document.getElementById('hpt').textContent=points;
-  document.getElementById('home-pts').textContent=points;
-}
+function renderHeader(){document.getElementById('hpt').textContent=points;document.getElementById('home-pts').textContent=points;}
 
 function renderHome(){
   const today=todayStr(),tt=tasks.filter(t=>t.date===today);
@@ -650,7 +611,6 @@ function taskCardHTML(t){
   const missBadge=t.mission?`<span class="badge badge-miss">🔥ミッション</span>`:'';
   const penBadge=t.penalized?`<span class="badge" style="background:#ccc">ペナルティ済</span>`:'';
   let cls='tc';if(t.done)cls+=' done';if(t.mission&&!t.done)cls+=' mission-card';if(overdue&&!t.done)cls+=' overdue-card';
-  // 編集・削除ボタン（保護者のみ）
   const actions=isParent?`<div class="tc-actions"><button class="edit-btn" onclick="openEditTask('${t.id}')">✏️</button><button class="del-btn" onclick="delTask('${t.id}')">🗑</button></div>`:'';
   return`<div class="${cls}"><button class="chk ${t.done?'on':''}" onclick="toggleTask('${t.id}')">${t.done?'✓':''}</button><div class="tc-body"><div class="tc-name">${esc(t.name)}</div><div class="tc-meta"><span class="badge" style="background:${cat.color}">${cat.emoji} ${cat.label}</span>${missBadge}${penBadge}${dateLbl}${timeLbl}<span class="badge-pt">+${t.pts}pt</span></div></div>${actions}</div>`;
 }
@@ -660,7 +620,6 @@ function renderRewards(){
   const reqList=document.getElementById('reward-requests');
   if(!rewardRequests.length){reqList.innerHTML=`<div class="empty"><div class="empty-ic">📭</div><div class="empty-tx">申請はまだないよ</div></div>`;return;}
   reqList.innerHTML=rewardRequests.map(r=>`<div class="rwd-card"><div class="rwd-ic">${r.icon||'🎁'}</div><div class="rwd-info"><div class="rwd-name">${esc(r.name)}</div><div class="rwd-cost">🪙 ${r.cost}pt</div></div><span class="rwd-status ${r.status==='pending'?'pending':'approved'}">${r.status==='pending'?'承認待ち':'承認済み ✅'}</span></div>`).join('');
-  // バッジ処理
   if(!isParent){
     const approvedCount=rewardRequests.filter(r=>r.status==='approved'&&!r.childRead).length;
     const rewardsTab=document.querySelector('.tab:nth-child(3)');
@@ -681,24 +640,41 @@ function renderCalendar(){
   if(!calYear)return;
   document.getElementById('cal-month-lbl').textContent=`${calYear}年 ${calMonth+1}月`;
   const grid=document.getElementById('cal-grid');
-  const dows=['日','月','火','水','木','金','土'];
-  let html=dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
-  const firstDow=new Date(calYear,calMonth,1).getDay();
+  // 月曜始まりの曜日ヘッダー（日曜は赤）
+  let html=DOW_LABELS_MON.map((d,i)=>`<div class="cal-dow${i===6?' sun':''}">${d}</div>`).join('');
+  // 月の1日が週の何番目か（月曜=0）
+  const firstDay=new Date(calYear,calMonth,1);
+  const firstDowMon=monFirstDow(firstDay);
   const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
   const prevDays=new Date(calYear,calMonth,0).getDate();
   const today=todayStr();
-  for(let i=firstDow-1;i>=0;i--){const day=prevDays-i;html+=`<button class="cal-day other-month" onclick="selectDay(${calYear},${calMonth-1},${day})">${day}</button>`;}
+  // 前月の埋め
+  for(let i=firstDowMon-1;i>=0;i--){
+    const day=prevDays-i;
+    html+=`<button class="cal-day other-month" onclick="selectDay(${calYear},${calMonth-1},${day})">${day}</button>`;
+  }
+  // 当月
   for(let day=1;day<=daysInMonth;day++){
     const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
     const isToday=ds===today,isSel=ds===selDate;
+    const dayDate=new Date(calYear,calMonth,day);
+    const isSun=dayDate.getDay()===0;
     const dayTasks=tasks.filter(t=>t.date===ds);
     const daySch=schedules.filter(s=>s.date===ds);
     const hasMiss=dayTasks.some(t=>t.mission);
-    let cls='cal-day';if(isToday)cls+=' today';else if(isSel)cls+=' selected';if(hasMiss)cls+=' has-mission';
-    const items=[...dayTasks.slice(0,1).map(t=>`<div class="cal-task-dot">${getCat(t.cat).emoji}${esc(t.name)}</div>`),...daySch.slice(0,1).map(s=>`<div class="cal-task-dot is-schedule">📌${esc(s.name)}</div>`)];
+    let cls='cal-day';
+    if(isToday)cls+=' today';else if(isSel)cls+=' selected';
+    if(hasMiss)cls+=' has-mission';
+    if(isSun)cls+=' sun-col';
+    const items=[
+      ...dayTasks.slice(0,1).map(t=>`<div class="cal-task-dot">${getCat(t.cat).emoji}${esc(t.name)}</div>`),
+      ...daySch.slice(0,1).map(s=>`<div class="cal-task-dot is-schedule">📌${esc(s.name)}</div>`)
+    ];
     html+=`<button class="${cls}" onclick="selectDay(${calYear},${calMonth},${day})">${day}<div class="cal-tasks-preview">${items.slice(0,2).join('')}</div></button>`;
   }
-  const rem=(firstDow+daysInMonth)%7===0?0:7-(firstDow+daysInMonth)%7;
+  // 次月の埋め
+  const totalCells=firstDowMon+daysInMonth;
+  const rem=totalCells%7===0?0:7-(totalCells%7);
   for(let i=1;i<=rem;i++)html+=`<button class="cal-day other-month" onclick="selectDay(${calYear},${calMonth+1},${i})">${i}</button>`;
   grid.innerHTML=html;
 }
@@ -725,11 +701,9 @@ function renderDayItems(){
   list.innerHTML=html;
 }
 
-// ── 繰り返しグループ ──
 function renderRepeatGroups(){
   if(!isParent)return;
   const rgList=document.getElementById('repeat-group-list');
-  // repeatGroupIdを持つタスクをグループ化
   const groups={};
   tasks.forEach(t=>{
     if(!t.repeatGroupId)return;
@@ -741,22 +715,8 @@ function renderRepeatGroups(){
   if(!groupList.length){rgList.innerHTML=`<div class="empty"><div class="empty-ic">🔁</div><div class="empty-tx">繰り返しタスクはまだないよ</div></div>`;return;}
   rgList.innerHTML=groupList.map(g=>{
     const dates=g.dates.filter(Boolean).sort();
-    const startDate=dates[0]||'';
-    const endDate=dates[dates.length-1]||'';
     const cat=getCat(g.cat);
-    return`<div class="rg-card">
-      <div class="rg-top">
-        <div class="rg-icon">${cat.emoji}</div>
-        <div class="rg-info">
-          <div class="rg-name">${esc(g.name)}</div>
-          <div class="rg-meta">${startDate} 〜 ${endDate}（${g.tasks.length}件）</div>
-        </div>
-      </div>
-      <div class="rg-actions">
-        <button class="rg-edit-btn" onclick="openRepeatGroupEdit('${g.id}','${esc(g.name)}','${g.cat}',${g.pts})">✏️ 一括編集</button>
-        <button class="rg-del-btn" onclick="deleteRepeatGroup('${g.id}')">🗑 一括削除</button>
-      </div>
-    </div>`;
+    return`<div class="rg-card"><div class="rg-top"><div class="rg-icon">${cat.emoji}</div><div class="rg-info"><div class="rg-name">${esc(g.name)}</div><div class="rg-meta">${dates[0]||''} 〜 ${dates[dates.length-1]||''}（${g.tasks.length}件）</div></div></div><div class="rg-actions"><button class="rg-edit-btn" onclick="openRepeatGroupEdit('${g.id}','${esc(g.name)}','${g.cat}',${g.pts})">✏️ 一括編集</button><button class="rg-del-btn" onclick="deleteRepeatGroup('${g.id}')">🗑 一括削除</button></div></div>`;
   }).join('');
 }
 
@@ -770,7 +730,6 @@ function renderParent(){
   else trList.innerHTML=trackers.map(tr=>`<div class="tracker-card"><div class="tracker-top"><div class="tracker-name">${esc(tr.name)}</div><button class="del-btn" onclick="deleteTracker('${tr.id}')">🗑</button></div><div style="font-size:13px;color:var(--muted);margin-bottom:8px">${tr.current||0} / ${tr.goal} ${esc(tr.unit||'')}</div><div class="tracker-bar-wrap"><div class="tracker-bar" style="width:${tr.goal?Math.min(100,Math.round((tr.current||0)/tr.goal*100)):0}%"></div></div></div>`).join('');
 }
 
-// ── ACTIONS ──
 window.toggleTask=async function(id){
   if(!currentUser)return;
   const t=tasks.find(t=>t.id===id);if(!t)return;
@@ -781,54 +740,32 @@ window.toggleTask=async function(id){
   await setDoc(doc(db,'users',uid,'meta','points'),{value:newPts});
   if(t.trackerId&&t.trackerVal){
     const tr=trackers.find(tr=>tr.id===t.trackerId);
-    if(tr){
-      const newVal=newDone?(tr.current||0)+Number(t.trackerVal):Math.max(0,(tr.current||0)-Number(t.trackerVal));
-      await updateDoc(doc(db,'users',uid,'trackers',t.trackerId),{current:newVal});
-    }
+    if(tr){const newVal=newDone?(tr.current||0)+Number(t.trackerVal):Math.max(0,(tr.current||0)-Number(t.trackerVal));await updateDoc(doc(db,'users',uid,'trackers',t.trackerId),{current:newVal});}
   }
   if(newDone){
     const today=todayStr();
     const todayTasks=tasks.filter(t=>t.date===today);
     const allDone=todayTasks.every(t=>t.id===id?true:t.done);
-    if(allDone&&todayTasks.length>0){
-      await setDoc(doc(db,'users',uid,'notifications','toParent'),{message:'今日のタスクを全部完了したよ！🎉',read:false,createdAt:Date.now()});
-    }
+    if(allDone&&todayTasks.length>0){await setDoc(doc(db,'users',uid,'notifications','toParent'),{message:'今日のタスクを全部完了したよ！🎉',read:false,createdAt:Date.now()});}
   }
   toast(newDone?`+${t.pts}pt ゲット！🎉`:'未完了に戻したよ');
 };
-
-window.delTask=async function(id){
-  if(!currentUser)return;
-  if(!confirm('このタスクを削除する？'))return;
-  await deleteDoc(doc(db,'users',getUid(),'tasks',id));
-  toast('削除したよ🗑');
-};
-
-// 繰り返しグループ一括削除
+window.delTask=async function(id){if(!currentUser)return;if(!confirm('このタスクを削除する？'))return;await deleteDoc(doc(db,'users',getUid(),'tasks',id));toast('削除したよ🗑');};
 window.deleteRepeatGroup=async function(groupId){
   if(!confirm('この繰り返しタスクをすべて削除する？'))return;
   const uid=getUid();
   const groupTasks=tasks.filter(t=>t.repeatGroupId===groupId);
-  for(let i=0;i<groupTasks.length;i+=490){
-    const batch=writeBatch(db);
-    groupTasks.slice(i,i+490).forEach(t=>batch.delete(doc(db,'users',uid,'tasks',t.id)));
-    await batch.commit();
-  }
+  for(let i=0;i<groupTasks.length;i+=490){const batch=writeBatch(db);groupTasks.slice(i,i+490).forEach(t=>batch.delete(doc(db,'users',uid,'tasks',t.id)));await batch.commit();}
   toast(`${groupTasks.length}件の繰り返しタスクを削除したよ🗑`);
 };
-
-// 繰り返しグループ一括編集モーダル
 window.openRepeatGroupEdit=function(groupId,name,cat,pts){
   document.getElementById('rg-edit-id').value=groupId;
   document.getElementById('rg-edit-name').value=name;
   document.getElementById('rg-edit-pts').value=pts;
-  rgEditCat=cat;
-  renderRgEditCatSel();
+  rgEditCat=cat;renderRgEditCatSel();
   document.getElementById('rg-edit-overlay').classList.add('open');
 };
-function renderRgEditCatSel(){
-  document.getElementById('rg-edit-cat-sel').innerHTML=CATS.map(c=>{const on=rgEditCat===c.id;return`<button class="cs-btn ${on?'on':''}" style="${on?`background:${c.color};`:''}" onclick="selRgCat('${c.id}')">${c.emoji} ${c.label}</button>`;}).join('');
-}
+function renderRgEditCatSel(){document.getElementById('rg-edit-cat-sel').innerHTML=CATS.map(c=>{const on=rgEditCat===c.id;return`<button class="cs-btn ${on?'on':''}" style="${on?`background:${c.color};`:''}" onclick="selRgCat('${c.id}')">${c.emoji} ${c.label}</button>`;}).join('');}
 window.selRgCat=function(id){rgEditCat=id;renderRgEditCatSel();};
 window.saveRepeatGroup=async function(){
   if(!currentUser)return;
@@ -838,16 +775,10 @@ window.saveRepeatGroup=async function(){
   if(!name){toast('タスク名を入力してね','bad');return;}
   const uid=getUid();
   const groupTasks=tasks.filter(t=>t.repeatGroupId===groupId);
-  for(let i=0;i<groupTasks.length;i+=490){
-    const batch=writeBatch(db);
-    groupTasks.slice(i,i+490).forEach(t=>batch.update(doc(db,'users',uid,'tasks',t.id),{name,cat:rgEditCat,pts}));
-    await batch.commit();
-  }
+  for(let i=0;i<groupTasks.length;i+=490){const batch=writeBatch(db);groupTasks.slice(i,i+490).forEach(t=>batch.update(doc(db,'users',uid,'tasks',t.id),{name,cat:rgEditCat,pts}));await batch.commit();}
   document.getElementById('rg-edit-overlay').classList.remove('open');
   toast(`${groupTasks.length}件を一括変更したよ✅`);
 };
-
-// 個別タスク編集
 window.openEditTask=function(id){
   const t=tasks.find(t=>t.id===id);if(!t)return;
   document.getElementById('edit-task-id').value=id;
@@ -856,13 +787,10 @@ window.openEditTask=function(id){
   document.getElementById('edit-pts').value=t.pts;
   document.getElementById('edit-time').value=t.time||'';
   document.getElementById('edit-pen').value=t.penalty||20;
-  editCat=t.cat||'study';
-  renderEditCatSel();
+  editCat=t.cat||'study';renderEditCatSel();
   document.getElementById('edit-overlay').classList.add('open');
 };
-function renderEditCatSel(){
-  document.getElementById('edit-cat-sel').innerHTML=CATS.map(c=>{const on=editCat===c.id;return`<button class="cs-btn ${on?'on':''}" style="${on?`background:${c.color};`:''}" onclick="selEditCat('${c.id}')">${c.emoji} ${c.label}</button>`;}).join('');
-}
+function renderEditCatSel(){document.getElementById('edit-cat-sel').innerHTML=CATS.map(c=>{const on=editCat===c.id;return`<button class="cs-btn ${on?'on':''}" style="${on?`background:${c.color};`:''}" onclick="selEditCat('${c.id}')">${c.emoji} ${c.label}</button>`;}).join('');}
 window.selEditCat=function(id){editCat=id;renderEditCatSel();};
 window.saveEditTask=async function(){
   if(!currentUser)return;
@@ -870,18 +798,10 @@ window.saveEditTask=async function(){
   const name=document.getElementById('edit-name').value.trim();
   if(!name){toast('タスク名を入力してね','bad');return;}
   const uid=getUid();
-  await updateDoc(doc(db,'users',uid,'tasks',id),{
-    name,
-    cat:editCat,
-    date:document.getElementById('edit-date').value,
-    pts:parseInt(document.getElementById('edit-pts').value)||10,
-    time:document.getElementById('edit-time').value||null,
-    penalty:parseInt(document.getElementById('edit-pen').value)||20,
-  });
+  await updateDoc(doc(db,'users',uid,'tasks',id),{name,cat:editCat,date:document.getElementById('edit-date').value,pts:parseInt(document.getElementById('edit-pts').value)||10,time:document.getElementById('edit-time').value||null,penalty:parseInt(document.getElementById('edit-pen').value)||20});
   document.getElementById('edit-overlay').classList.remove('open');
   toast('タスクを変更したよ✅');
 };
-
 window.requestReward=async function(id,name,icon,cost){
   if(!currentUser||points<cost)return;
   const uid=getUid();
@@ -904,25 +824,11 @@ window.rejectReward=async function(id,name){
   await setDoc(doc(db,'users',uid,'notifications','toChild'),{message:`「${name}」のごほうびは今回はナシになったよ`,read:false,createdAt:Date.now()});
   toast('却下しました');
 };
-window.delSchedule=async function(id){
-  if(!currentUser)return;
-  if(!confirm('この予定を削除する？'))return;
-  await deleteDoc(doc(db,'users',getUid(),'schedules',id));
-  toast('削除したよ🗑');
-};
+window.delSchedule=async function(id){if(!currentUser)return;if(!confirm('この予定を削除する？'))return;await deleteDoc(doc(db,'users',getUid(),'schedules',id));toast('削除したよ🗑');};
 window.adjPt=function(n){adjAmount=Math.max(0,adjAmount+n);document.getElementById('adj-val').textContent=adjAmount;};
-window.applyPtAdj=async function(){
-  if(!currentUser)return;
-  await setDoc(doc(db,'users',getUid(),'meta','points'),{value:adjAmount});
-  toast(`ポイントを${adjAmount}ptに変更したよ`);
-};
-window.deleteTracker=async function(id){
-  if(!confirm('このトラッカーを削除する？'))return;
-  await deleteDoc(doc(db,'users',getUid(),'trackers',id));
-  toast('トラッカーを削除したよ🗑');
-};
+window.applyPtAdj=async function(){if(!currentUser)return;await setDoc(doc(db,'users',getUid(),'meta','points'),{value:adjAmount});toast(`ポイントを${adjAmount}ptに変更したよ`);};
+window.deleteTracker=async function(id){if(!confirm('このトラッカーを削除する？'))return;await deleteDoc(doc(db,'users',getUid(),'trackers',id));toast('トラッカーを削除したよ🗑');};
 
-// ── TASK MODAL ──
 window.openModal=function(){
   document.getElementById('inp-name').value='';
   document.getElementById('inp-pts').value=10;
@@ -931,8 +837,7 @@ window.openModal=function(){
   document.getElementById('inp-tracker-val').value=0;
   document.getElementById('inp-date').value=selDate||todayStr();
   document.getElementById('inp-repeat-start').value=selDate||todayStr();
-  const start=new Date(selDate||todayStr());
-  start.setMonth(start.getMonth()+3);
+  const start=new Date(selDate||todayStr());start.setMonth(start.getMonth()+3);
   document.getElementById('inp-repeat-end').value=start.toISOString().split('T')[0];
   isMission=false;isRepeat=false;selectedDows=[];
   updateMissionToggle();updateRepeatToggle();renderCatSel();
@@ -943,31 +848,24 @@ window.openModal=function(){
 };
 window.closeOverlayOut=function(e,id){if(e.target.id===id)document.getElementById(id).classList.remove('open');};
 window.toggleMission=function(){isMission=!isMission;updateMissionToggle();};
-function updateMissionToggle(){
-  document.getElementById('miss-toggle').classList.toggle('on',isMission);
-  document.getElementById('miss-fields').style.display=isMission?'block':'none';
-}
+function updateMissionToggle(){document.getElementById('miss-toggle').classList.toggle('on',isMission);document.getElementById('miss-fields').style.display=isMission?'block':'none';}
 window.toggleRepeat=function(){isRepeat=!isRepeat;updateRepeatToggle();};
 function updateRepeatToggle(){
   const btn=document.getElementById('repeat-toggle');
-  btn.classList.toggle('on',isRepeat);
-  btn.classList.toggle('on-blue',isRepeat);
+  btn.classList.toggle('on',isRepeat);btn.classList.toggle('on-blue',isRepeat);
   document.getElementById('repeat-fields').style.display=isRepeat?'block':'none';
   document.getElementById('single-date-wrap').style.display=isRepeat?'none':'block';
   updateRepeatUI();
 }
-window.updateRepeatUI=function(){
-  const type=document.getElementById('inp-repeat-type').value;
-  document.getElementById('dow-select-wrap').style.display=(type==='weekly')?'block':'none';
-};
+window.updateRepeatUI=function(){document.getElementById('dow-select-wrap').style.display=(document.getElementById('inp-repeat-type').value==='weekly')?'block':'none';};
 window.toggleDow=function(d){
   const idx=selectedDows.indexOf(d);
   if(idx>=0)selectedDows.splice(idx,1);else selectedDows.push(d);
-  document.querySelectorAll('.dow-btn').forEach((btn,i)=>btn.classList.toggle('on',selectedDows.includes(i)));
+  // 月曜始まりの順（月火水木金土日 = 1,2,3,4,5,6,0）
+  const order=[1,2,3,4,5,6,0];
+  document.querySelectorAll('.dow-btn').forEach((btn,i)=>btn.classList.toggle('on',selectedDows.includes(order[i])));
 };
-function renderCatSel(){
-  document.getElementById('cat-sel').innerHTML=CATS.map(c=>{const on=selectedCat===c.id;return`<button class="cs-btn ${on?'on':''}" style="${on?`background:${c.color};`:''}" onclick="selCat('${c.id}')">${c.emoji} ${c.label}</button>`;}).join('');
-}
+function renderCatSel(){document.getElementById('cat-sel').innerHTML=CATS.map(c=>{const on=selectedCat===c.id;return`<button class="cs-btn ${on?'on':''}" style="${on?`background:${c.color};`:''}" onclick="selCat('${c.id}')">${c.emoji} ${c.label}</button>`;}).join('');}
 window.selCat=function(id){selectedCat=id;renderCatSel();};
 
 window.addTask=async function(){
@@ -977,15 +875,8 @@ window.addTask=async function(){
   const trackerId=document.getElementById('inp-tracker').value;
   const trackerVal=parseInt(document.getElementById('inp-tracker-val').value)||0;
   const uid=getUid();
-  const baseTask={
-    name,cat:selectedCat,
-    pts:parseInt(document.getElementById('inp-pts').value)||10,
-    mission:isMission,done:false,penalized:false,
-    trackerId:trackerId||null,trackerVal:trackerId?trackerVal:0,
-    createdAt:Date.now()
-  };
+  const baseTask={name,cat:selectedCat,pts:parseInt(document.getElementById('inp-pts').value)||10,mission:isMission,done:false,penalized:false,trackerId:trackerId||null,trackerVal:trackerId?trackerVal:0,createdAt:Date.now()};
   if(isMission){baseTask.time=document.getElementById('inp-time').value||null;baseTask.penalty=parseInt(document.getElementById('inp-pen').value)||20;}
-
   if(!isRepeat){
     baseTask.date=document.getElementById('inp-date').value;
     await addDoc(collection(db,'users',uid,'tasks'),baseTask);
@@ -1011,22 +902,14 @@ window.addTask=async function(){
       cur.setDate(cur.getDate()+1);
     }
     if(dates.length===0){toast('該当する日付がないよ','bad');return;}
-    // グループIDを生成
     const groupId=`rg_${Date.now()}`;
-    for(let i=0;i<dates.length;i+=490){
-      const batch=writeBatch(db);
-      dates.slice(i,i+490).forEach(date=>{
-        batch.set(doc(collection(db,'users',uid,'tasks')),{...baseTask,date,repeatGroupId:groupId});
-      });
-      await batch.commit();
-    }
+    for(let i=0;i<dates.length;i+=490){const batch=writeBatch(db);dates.slice(i,i+490).forEach(date=>{batch.set(doc(collection(db,'users',uid,'tasks')),{...baseTask,date,repeatGroupId:groupId});});await batch.commit();}
     selDate=startStr;
     toast(`${dates.length}件の繰り返しタスクを追加したよ📝`);
   }
   document.getElementById('add-overlay').classList.remove('open');
 };
 
-// ── SCHEDULE MODAL ──
 window.openScheduleModal=function(){
   document.getElementById('sc-name').value='';
   document.getElementById('sc-date').value=selDate||todayStr();
@@ -1046,14 +929,7 @@ window.addSchedule=async function(){
   document.getElementById('schedule-overlay').classList.remove('open');
   toast('よていを追加したよ📌');
 };
-
-// ── TRACKER MODAL ──
-window.openTrackerModal=function(){
-  document.getElementById('tr-name').value='';
-  document.getElementById('tr-unit').value='';
-  document.getElementById('tr-goal').value=100;
-  document.getElementById('tracker-overlay').classList.add('open');
-};
+window.openTrackerModal=function(){document.getElementById('tr-name').value='';document.getElementById('tr-unit').value='';document.getElementById('tr-goal').value=100;document.getElementById('tracker-overlay').classList.add('open');};
 window.addTracker=async function(){
   if(!currentUser)return;
   const name=document.getElementById('tr-name').value.trim();
@@ -1063,7 +939,6 @@ window.addTracker=async function(){
   toast('トラッカーを追加したよ📊');
 };
 
-// ── TABS ──
 window.showTab=function(tab){
   if(tab==='parent'&&!isParent){toast('保護者専用ページです','bad');return;}
   const tabs=['home','tasks','rewards','schedule','parent'];
@@ -1072,24 +947,16 @@ window.showTab=function(tab){
   document.getElementById('page-'+tab).classList.add('active');
   document.getElementById('fab').style.display=(tab==='parent')?'flex':'none';
   if(tab==='rewards'&&!isParent){
-    rewardRequests.filter(r=>r.status==='approved'&&!r.childRead).forEach(r=>{
-      updateDoc(doc(db,'users',currentUser.uid,'rewardRequests',r.id),{childRead:true});
-    });
+    rewardRequests.filter(r=>r.status==='approved'&&!r.childRead).forEach(r=>{updateDoc(doc(db,'users',currentUser.uid,'rewardRequests',r.id),{childRead:true});});
   }
 };
 
-// ── TOAST ──
 function toast(msg,type=''){
   const el=document.getElementById('toast');
   el.textContent=msg;el.className='toast show'+(type?' '+type:'');
   clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('show'),2400);
 }
-
-// ── INIT ──
-function initCalendar(){
-  const now=new Date();calYear=now.getFullYear();calMonth=now.getMonth();selDate=todayStr();
-  renderAll();
-}
+function initCalendar(){const now=new Date();calYear=now.getFullYear();calMonth=now.getMonth();selDate=todayStr();renderAll();}
 setInterval(()=>{if(currentUser){checkPenalties();renderAll();}},60000);
 </script>
 </body>
