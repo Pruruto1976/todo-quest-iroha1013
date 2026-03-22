@@ -8,7 +8,6 @@
 <style>
 :root {
   --bg: #f5f3ff;
-  --card: #ffffff;
   --primary: #7c5cfc;
   --primary-light: #ede9ff;
   --accent: #ff6b9d;
@@ -26,12 +25,25 @@
 html,body{height:100%;overflow:hidden;}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);display:flex;flex-direction:column;}
 
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#7c5cfc,#b06bff);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;padding:32px;}
+.login-screen.hide{display:none;}
+.login-logo{font-size:64px;margin-bottom:16px;}
+.login-title{color:#fff;font-size:28px;font-weight:900;margin-bottom:8px;}
+.login-sub{color:rgba(255,255,255,.8);font-size:15px;margin-bottom:48px;text-align:center;}
+.google-btn{background:#fff;border:none;border-radius:14px;padding:16px 28px;display:flex;align-items:center;gap:12px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;color:#1e1b2e;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.18);transition:transform .15s;}
+.google-btn:active{transform:scale(.96);}
+.google-icon{width:24px;height:24px;}
+.login-err{color:#ffd166;font-size:13px;font-weight:700;margin-top:20px;text-align:center;min-height:20px;}
+
 .hdr{background:linear-gradient(135deg,#7c5cfc 0%,#b06bff 100%);padding:env(safe-area-inset-top,0) 16px 0;flex-shrink:0;position:relative;overflow:hidden;}
 .hdr::after{content:'';position:absolute;width:180px;height:180px;background:rgba(255,255,255,.07);border-radius:50%;top:-60px;right:-40px;pointer-events:none;}
 .hdr-inner{padding:14px 0 0;}
 .hdr-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;}
-.hdr-title{color:#fff;font-size:20px;font-weight:900;letter-spacing:-.5px;}
+.hdr-title{color:#fff;font-size:18px;font-weight:900;letter-spacing:-.5px;display:flex;align-items:center;gap:8px;}
+.hdr-avatar{width:28px;height:28px;border-radius:50%;border:2px solid rgba(255,255,255,.6);}
+.hdr-right{display:flex;align-items:center;gap:8px;}
 .pt-chip{background:rgba(255,255,255,.2);border:1.5px solid rgba(255,255,255,.45);border-radius:50px;padding:6px 14px;color:#fff;font-weight:800;font-size:14px;display:flex;align-items:center;gap:5px;cursor:pointer;}
+.logout-btn{background:rgba(255,255,255,.15);border:1.5px solid rgba(255,255,255,.3);border-radius:50px;padding:6px 12px;color:#fff;font-weight:700;font-size:12px;cursor:pointer;font-family:'Nunito',sans-serif;}
 .prog-wrap{background:rgba(255,255,255,.18);border-radius:100px;height:8px;overflow:hidden;margin-bottom:6px;}
 .prog-bar{height:100%;background:linear-gradient(90deg,#ffd166,#ff6b9d);border-radius:100px;transition:width .6s cubic-bezier(.34,1.56,.64,1);}
 .prog-lbl{color:rgba(255,255,255,.85);font-size:12px;font-weight:700;padding-bottom:12px;}
@@ -43,21 +55,15 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .tab.active .ti{transform:translateY(-2px);}
 
 .pages{flex:1;overflow:hidden;position:relative;}
-.page{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px;display:none;}
+.page{position:absolute;inset:0;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px;display:none;}
 .page.active{display:block;}
 
-/* Loading */
-.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:16px;color:var(--muted);}
-.spinner{width:40px;height:40px;border:4px solid var(--primary-light);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* Calendar */
 .cal-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
 .cal-nav-btn{background:none;border:none;font-size:22px;cursor:pointer;padding:4px 10px;border-radius:10px;color:var(--primary);}
 .cal-month{font-size:17px;font-weight:900;}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:16px;}
 .cal-dow{text-align:center;font-size:11px;font-weight:700;color:var(--muted);padding-bottom:4px;}
-.cal-day{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all .15s;font-size:13px;font-weight:700;position:relative;background:transparent;border:none;font-family:'Nunito',sans-serif;color:var(--text);}
+.cal-day{aspect-ratio:1;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;font-size:13px;font-weight:700;position:relative;background:transparent;border:none;font-family:'Nunito',sans-serif;color:var(--text);}
 .cal-day.other-month{color:#ccc;}
 .cal-day.today{background:var(--primary);color:#fff !important;box-shadow:0 3px 10px rgba(124,92,252,.4);}
 .cal-day.selected:not(.today){background:var(--primary-light);color:var(--primary);}
@@ -65,20 +71,17 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .dot{width:5px;height:5px;border-radius:50%;background:transparent;margin-top:2px;}
 .cal-day.has-task .dot{background:var(--muted);}
 .cal-day.today .dot{background:rgba(255,255,255,.7);}
-
 .day-header{font-size:15px;font-weight:900;margin-bottom:10px;}
 .day-header span{color:var(--primary);}
 
-.tc{background:#fff;border-radius:var(--radius);padding:14px;margin-bottom:9px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,.05);animation:si .25s ease;transition:opacity .3s;}
+.tc{background:#fff;border-radius:var(--radius);padding:14px;margin-bottom:9px;display:flex;align-items:center;gap:12px;box-shadow:0 2px 10px rgba(0,0,0,.05);animation:si .25s ease;}
 @keyframes si{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .tc.done{opacity:.5;}
 .tc.done .tc-name{text-decoration:line-through;color:var(--muted);}
 .tc.mission-card{border-left:4px solid var(--mission);}
 .tc.overdue-card{border-left:4px solid var(--red);}
-
 .chk{width:34px;height:34px;border-radius:50%;border:2.5px solid #ddd;background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:17px;transition:all .2s;flex-shrink:0;}
 .chk.on{background:var(--green);border-color:var(--green);color:#fff;}
-
 .tc-body{flex:1;min-width:0;}
 .tc-name{font-size:14px;font-weight:700;margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .tc-meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;}
@@ -101,8 +104,8 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .sec-ttl{font-size:12px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin:12px 0 8px;}
 .cat-row{display:flex;gap:7px;overflow-x:auto;padding-bottom:2px;margin-bottom:12px;scrollbar-width:none;}
 .cat-row::-webkit-scrollbar{display:none;}
-.cat-btn{border:none;border-radius:50px;padding:6px 13px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;background:#fff;color:var(--muted);box-shadow:0 2px 6px rgba(0,0,0,.06);transition:all .15s;}
-.cat-btn.on{color:#fff;box-shadow:0 3px 10px rgba(0,0,0,.18);}
+.cat-btn{border:none;border-radius:50px;padding:6px 13px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;background:#fff;color:var(--muted);box-shadow:0 2px 6px rgba(0,0,0,.06);}
+.cat-btn.on{color:#fff;}
 
 .empty{text-align:center;padding:36px 16px;color:var(--muted);}
 .empty-ic{font-size:44px;margin-bottom:8px;}
@@ -116,11 +119,11 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .rwd-info{flex:1;}
 .rwd-name{font-weight:800;font-size:14px;}
 .rwd-cost{font-size:12px;color:var(--accent);font-weight:700;margin-top:2px;}
-.rwd-btn{border:none;border-radius:10px;padding:8px 13px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;background:var(--primary-light);color:var(--primary);transition:all .2s;}
+.rwd-btn{border:none;border-radius:10px;padding:8px 13px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;background:var(--primary-light);color:var(--primary);}
 .rwd-btn:disabled{opacity:.35;cursor:not-allowed;}
 .rwd-btn:not(:disabled):active{background:var(--primary);color:#fff;}
 
-.fab{position:fixed;bottom:calc(var(--tab-h) + 16px);right:16px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#7c5cfc,#b06bff);border:none;color:#fff;font-size:26px;box-shadow:0 5px 20px rgba(124,92,252,.45);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s;z-index:50;}
+.fab{position:fixed;bottom:calc(var(--tab-h) + 16px);right:16px;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#7c5cfc,#b06bff);border:none;color:#fff;font-size:26px;box-shadow:0 5px 20px rgba(124,92,252,.45);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:50;}
 .fab:active{transform:scale(.93);}
 
 .overlay{display:none;position:fixed;inset:0;background:rgba(20,15,40,.5);z-index:100;align-items:flex-end;justify-content:center;}
@@ -134,7 +137,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .fi{width:100%;padding:11px 13px;border:2px solid #eee;border-radius:11px;font-family:'Nunito',sans-serif;font-size:14px;font-weight:600;outline:none;transition:border-color .2s;}
 .fi:focus{border-color:var(--primary);}
 .cat-sel-row{display:flex;gap:7px;flex-wrap:wrap;}
-.cs-btn{border:2px solid #eee;border-radius:10px;padding:7px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:#fff;color:var(--text);transition:all .15s;}
+.cs-btn{border:2px solid #eee;border-radius:10px;padding:7px 12px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;background:#fff;color:var(--text);}
 .cs-btn.on{color:#fff;border-color:transparent;}
 .toggle-row{display:flex;align-items:center;justify-content:space-between;background:#f8f6ff;border-radius:12px;padding:12px 14px;}
 .toggle-label{font-size:14px;font-weight:700;}
@@ -145,7 +148,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .toggle.on::after{transform:translateX(20px);}
 .mission-fields{background:var(--mission-light);border-radius:12px;padding:12px;margin-top:8px;border:1.5px solid #ffd4a0;}
 .mission-fields .fl{color:var(--mission);}
-.sub-btn{width:100%;padding:15px;border-radius:13px;border:none;background:linear-gradient(135deg,#7c5cfc,#b06bff);color:#fff;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;margin-top:6px;box-shadow:0 4px 16px rgba(124,92,252,.4);transition:transform .15s;}
+.sub-btn{width:100%;padding:15px;border-radius:13px;border:none;background:linear-gradient(135deg,#7c5cfc,#b06bff);color:#fff;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;margin-top:6px;box-shadow:0 4px 16px rgba(124,92,252,.4);}
 .sub-btn:active{transform:scale(.97);}
 
 .toast{position:fixed;bottom:calc(var(--tab-h) + 14px);left:50%;transform:translateX(-50%) translateY(10px);background:#1e1b2e;color:#fff;padding:10px 22px;border-radius:50px;font-weight:700;font-size:13px;opacity:0;transition:all .3s;pointer-events:none;z-index:300;white-space:nowrap;}
@@ -165,14 +168,31 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 </head>
 <body>
 
+<div class="login-screen" id="login-screen">
+  <div class="login-logo">⭐</div>
+  <div class="login-title">やること帳</div>
+  <div class="login-sub">Googleアカウントでログインしてね</div>
+  <button class="google-btn" onclick="loginWithGoogle()">
+    <svg class="google-icon" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+    Googleでログイン
+  </button>
+  <div class="login-err" id="login-err"></div>
+</div>
+
 <div class="hdr">
   <div class="hdr-inner">
     <div class="hdr-row">
-      <div class="hdr-title">⭐ やること帳</div>
-      <div class="pt-chip" onclick="showTab('points')">🪙 <span id="hpt">0</span>pt</div>
+      <div class="hdr-title">
+        <img class="hdr-avatar" id="hdr-avatar" src="" style="display:none">
+        <span id="hdr-name">やること帳</span>
+      </div>
+      <div class="hdr-right">
+        <div class="pt-chip" onclick="showTab('points')">🪙 <span id="hpt">0</span>pt</div>
+        <button class="logout-btn" onclick="doLogout()">ログアウト</button>
+      </div>
     </div>
     <div class="prog-wrap"><div class="prog-bar" id="pbar" style="width:0%"></div></div>
-    <div class="prog-lbl" id="plbl">読み込み中...</div>
+    <div class="prog-lbl" id="plbl">今日: 0/0 完了</div>
   </div>
 </div>
 
@@ -187,14 +207,12 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
     <div class="day-header" id="day-header"></div>
     <div id="day-task-list"></div>
   </div>
-
   <div class="page" id="page-tasks">
     <div id="mission-banner"></div>
     <div class="cat-row" id="cat-filter"></div>
     <div class="sec-ttl">タスク一覧</div>
     <div id="task-list"></div>
   </div>
-
   <div class="page" id="page-points">
     <div class="pts-hero">
       <div class="pts-big">🪙<span id="pts-big-num">0</span></div>
@@ -217,39 +235,18 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
   <div class="modal">
     <div class="modal-handle"></div>
     <div class="modal-ttl">タスクを追加 ✏️</div>
-    <div class="fg">
-      <label class="fl">タスク名</label>
-      <input class="fi" id="inp-name" type="text" placeholder="例: 漢字ドリル10ページ" maxlength="40">
-    </div>
-    <div class="fg">
-      <label class="fl">カテゴリ</label>
-      <div class="cat-sel-row" id="cat-sel"></div>
-    </div>
-    <div class="fg">
-      <label class="fl">日付</label>
-      <input class="fi" id="inp-date" type="date">
-    </div>
-    <div class="fg">
-      <label class="fl">ポイント（完了時にゲット）</label>
-      <input class="fi" id="inp-pts" type="number" value="10" min="1" max="200">
-    </div>
+    <div class="fg"><label class="fl">タスク名</label><input class="fi" id="inp-name" type="text" placeholder="例: 漢字ドリル10ページ" maxlength="40"></div>
+    <div class="fg"><label class="fl">カテゴリ</label><div class="cat-sel-row" id="cat-sel"></div></div>
+    <div class="fg"><label class="fl">日付</label><input class="fi" id="inp-date" type="date"></div>
+    <div class="fg"><label class="fl">ポイント（完了時にゲット）</label><input class="fi" id="inp-pts" type="number" value="10" min="1" max="200"></div>
     <div class="fg">
       <div class="toggle-row">
-        <div>
-          <div class="toggle-label">🔥 ミッションにする</div>
-          <div class="toggle-sub">必ずやること・未完了でポイント減</div>
-        </div>
+        <div><div class="toggle-label">🔥 ミッションにする</div><div class="toggle-sub">必ずやること・未完了でポイント減</div></div>
         <button class="toggle" id="miss-toggle" onclick="toggleMission()"></button>
       </div>
       <div class="mission-fields" id="miss-fields" style="display:none;">
-        <div class="fg">
-          <label class="fl">⏰ 時間指定（任意）</label>
-          <input class="fi" id="inp-time" type="time">
-        </div>
-        <div class="fg" style="margin-bottom:0">
-          <label class="fl">💸 未完了ペナルティ（pt）</label>
-          <input class="fi" id="inp-pen" type="number" value="20" min="1" max="500">
-        </div>
+        <div class="fg"><label class="fl">⏰ 時間指定（任意）</label><input class="fi" id="inp-time" type="time"></div>
+        <div class="fg" style="margin-bottom:0"><label class="fl">💸 未完了ペナルティ（pt）</label><input class="fi" id="inp-pen" type="number" value="20" min="1" max="500"></div>
       </div>
     </div>
     <button class="sub-btn" onclick="addTask()">追加する！</button>
@@ -268,10 +265,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 
 <div class="toast" id="toast"></div>
 
-<!-- ★ Firebase設定 ここを自分のものに変えてください ★ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDVynkWdyCllY5Ghqju0lR7bbvYq27HF5A",
@@ -282,11 +279,16 @@ const firebaseConfig = {
   appId: "1:441639308528:web:1b67742f2bb27d4b304635"
 };
 
-const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
-const AUTH_SECRET = "いろは1013";
+// ★ 許可するGmailアドレス（追加する場合はここに書き足すだけでOK）
+const ALLOWED_EMAILS = [
+  "ruhitonium@gmail.com",
+  "ricopin1013@gmail.com",
+];
 
-// ───── CONSTANTS ─────
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const auth = getAuth(app);
+
 const CATS = [
   {id:'study', label:'勉強',       emoji:'📚', color:'#7c5cfc'},
   {id:'sport', label:'運動',       emoji:'⚽', color:'#06d6a0'},
@@ -295,164 +297,158 @@ const CATS = [
   {id:'other', label:'その他',     emoji:'💫', color:'#a78bfa'},
 ];
 const REWARDS = [
-  {id:'r1', name:'ゲーム30分',         icon:'🎮', cost:50},
-  {id:'r2', name:'おやつ1個',          icon:'🍪', cost:30},
-  {id:'r3', name:'好きな夕ごはん',     icon:'🍕', cost:100},
-  {id:'r4', name:'映画をみる',         icon:'🎬', cost:80},
+  {id:'r1', name:'ゲーム30分',           icon:'🎮', cost:50},
+  {id:'r2', name:'おやつ1個',            icon:'🍪', cost:30},
+  {id:'r3', name:'好きな夕ごはん',       icon:'🍕', cost:100},
+  {id:'r4', name:'映画をみる',           icon:'🎬', cost:80},
   {id:'r5', name:'文房具を買ってもらう', icon:'✏️', cost:150},
 ];
 
-// ───── STATE ─────
-let tasks = [];
-let points = 0;
+let tasks=[], points=0;
 let calYear, calMonth, selDate;
-let selectedCat = 'study';
-let isMission = false;
-let filterCat = 'all';
-let penaltyQueue = [];
+let selectedCat='study', isMission=false, filterCat='all';
+let penaltyQueue=[], currentUser=null;
+let unsubTasks=null, unsubPoints=null;
 
-// ───── HELPERS ─────
 function todayStr(){ return new Date().toISOString().split('T')[0]; }
 function getCat(id){ return CATS.find(c=>c.id===id)||CATS[4]; }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-// ───── FIRESTORE リスナー ─────
-// タスク
-onSnapshot(collection(db,'tasks'), snap => {
-  tasks = snap.docs.map(d=>({id:d.id,...d.data()}));
-  checkPenalties();
-  renderAll();
+window.loginWithGoogle = async function(){
+  document.getElementById('login-err').textContent='';
+  try {
+    const result = await signInWithPopup(auth, new GoogleAuthProvider());
+    if(!ALLOWED_EMAILS.includes(result.user.email)){
+      await signOut(auth);
+      document.getElementById('login-err').textContent='このアカウントは許可されていません';
+    }
+  } catch(e){
+    document.getElementById('login-err').textContent='ログインに失敗しました。もう一度お試しください';
+  }
+};
+
+window.doLogout = async function(){
+  if(!confirm('ログアウトしますか？')) return;
+  if(unsubTasks) unsubTasks();
+  if(unsubPoints) unsubPoints();
+  await signOut(auth);
+};
+
+onAuthStateChanged(auth, user => {
+  if(user && ALLOWED_EMAILS.includes(user.email)){
+    currentUser=user;
+    document.getElementById('login-screen').classList.add('hide');
+    const name = user.displayName?.split(' ')[0] || 'きみ';
+    document.getElementById('hdr-name').textContent = name+'のやること帳';
+    const avatar=document.getElementById('hdr-avatar');
+    if(user.photoURL){ avatar.src=user.photoURL; avatar.style.display='block'; }
+    startListeners(user.uid);
+  } else {
+    currentUser=null;
+    document.getElementById('login-screen').classList.remove('hide');
+    tasks=[]; points=0;
+    if(unsubTasks) unsubTasks();
+    if(unsubPoints) unsubPoints();
+  }
 });
 
-// ポイント
-onSnapshot(doc(db,'meta','points'), snap => {
-  points = snap.exists() ? (snap.data().value || 0) : 0;
-  renderAll();
-});
+function startListeners(uid){
+  unsubTasks=onSnapshot(collection(db,'users',uid,'tasks'), snap=>{
+    tasks=snap.docs.map(d=>({id:d.id,...d.data()}));
+    checkPenalties(); renderAll();
+  });
+  unsubPoints=onSnapshot(doc(db,'users',uid,'meta','points'), snap=>{
+    points=snap.exists()?(snap.data().value||0):0;
+    renderAll();
+  });
+}
 
-// ───── PENALTY ─────
 function checkPenalties(){
-  const now   = new Date();
-  const today = todayStr();
-  tasks.forEach(t => {
-    if(!t.mission || t.done || t.penalized) return;
-    const expired =
-      (t.date && t.date < today) ||
-      (t.date === today && t.time && (() => {
-        const [hh,mm] = t.time.split(':').map(Number);
-        const dl = new Date(); dl.setHours(hh,mm,0,0);
-        return now > dl;
-      })());
+  const now=new Date(), today=todayStr();
+  tasks.forEach(t=>{
+    if(!t.mission||t.done||t.penalized) return;
+    const expired=(t.date&&t.date<today)||(t.date===today&&t.time&&(()=>{
+      const [hh,mm]=t.time.split(':').map(Number);
+      const dl=new Date(); dl.setHours(hh,mm,0,0); return now>dl;
+    })());
     if(expired){
-      const pen = t.penalty || 20;
-      updateDoc(doc(db,'tasks',t.id),{penalized:true});
-      const newPts = Math.max(0, points - pen);
-      setDoc(doc(db,'meta','points'),{value:newPts});
-      penaltyQueue.push({name:t.name, pen});
+      const pen=t.penalty||20;
+      updateDoc(doc(db,'users',currentUser.uid,'tasks',t.id),{penalized:true});
+      setDoc(doc(db,'users',currentUser.uid,'meta','points'),{value:Math.max(0,points-pen)});
+      penaltyQueue.push({name:t.name,pen});
     }
   });
-  if(penaltyQueue.length > 0) showNextPenalty();
+  if(penaltyQueue.length>0) showNextPenalty();
 }
 function showNextPenalty(){
   if(!penaltyQueue.length) return;
-  const {name,pen} = penaltyQueue.shift();
-  document.getElementById('pen-task-name').textContent = name;
-  document.getElementById('pen-amount').textContent = `-${pen}pt`;
+  const {name,pen}=penaltyQueue.shift();
+  document.getElementById('pen-task-name').textContent=name;
+  document.getElementById('pen-amount').textContent=`-${pen}pt`;
   document.getElementById('pen-overlay').classList.add('open');
 }
-window.closePenalty = function(){
+window.closePenalty=function(){
   document.getElementById('pen-overlay').classList.remove('open');
-  if(penaltyQueue.length > 0) setTimeout(showNextPenalty,400);
+  if(penaltyQueue.length>0) setTimeout(showNextPenalty,400);
 };
 
-// ───── RENDER ─────
-function renderAll(){
-  renderHeader();
-  renderCalendar();
-  renderDayTasks();
-  renderTaskList();
-  renderPoints();
-}
+function renderAll(){ renderHeader(); renderCalendar(); renderDayTasks(); renderTaskList(); renderPoints(); }
 
 function renderHeader(){
-  document.getElementById('hpt').textContent = points;
-  const today = todayStr();
-  const tt = tasks.filter(t=>t.date===today);
-  const done = tt.filter(t=>t.done).length;
-  const total = tt.length;
-  const pct = total ? Math.round(done/total*100) : 0;
-  document.getElementById('pbar').style.width = pct+'%';
-  document.getElementById('plbl').textContent = `今日: ${done}/${total} 完了 (${pct}%)`;
+  document.getElementById('hpt').textContent=points;
+  const today=todayStr(), tt=tasks.filter(t=>t.date===today);
+  const done=tt.filter(t=>t.done).length, total=tt.length;
+  const pct=total?Math.round(done/total*100):0;
+  document.getElementById('pbar').style.width=pct+'%';
+  document.getElementById('plbl').textContent=`今日: ${done}/${total} 完了 (${pct}%)`;
 }
 
 function renderCalendar(){
-  document.getElementById('cal-month-lbl').textContent = `${calYear}年 ${calMonth+1}月`;
-  const grid = document.getElementById('cal-grid');
-  const dows = ['日','月','火','水','木','金','土'];
-  let html = dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
-  const firstDow = new Date(calYear,calMonth,1).getDay();
-  const daysInMonth = new Date(calYear,calMonth+1,0).getDate();
-  const prevDays = new Date(calYear,calMonth,0).getDate();
-  const today = todayStr();
-  for(let i=firstDow-1;i>=0;i--){
-    const day=prevDays-i;
-    html+=`<button class="cal-day other-month" onclick="selectDay(${calYear},${calMonth-1},${day})">${day}<span class="dot"></span></button>`;
-  }
+  document.getElementById('cal-month-lbl').textContent=`${calYear}年 ${calMonth+1}月`;
+  const grid=document.getElementById('cal-grid');
+  const dows=['日','月','火','水','木','金','土'];
+  let html=dows.map(d=>`<div class="cal-dow">${d}</div>`).join('');
+  const firstDow=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const prevDays=new Date(calYear,calMonth,0).getDate();
+  const today=todayStr();
+  for(let i=firstDow-1;i>=0;i--){const day=prevDays-i;html+=`<button class="cal-day other-month" onclick="selectDay(${calYear},${calMonth-1},${day})">${day}<span class="dot"></span></button>`;}
   for(let day=1;day<=daysInMonth;day++){
     const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
-    const isToday=ds===today, isSel=ds===selDate;
-    const hasMiss=tasks.some(t=>t.date===ds&&t.mission);
-    const hasTask=tasks.some(t=>t.date===ds);
+    const isToday=ds===today,isSel=ds===selDate;
+    const hasMiss=tasks.some(t=>t.date===ds&&t.mission),hasTask=tasks.some(t=>t.date===ds);
     let cls='cal-day';
     if(isToday) cls+=' today'; else if(isSel) cls+=' selected';
     if(hasMiss) cls+=' has-mission';
     if(hasTask) cls+=' has-task';
     html+=`<button class="${cls}" onclick="selectDay(${calYear},${calMonth},${day})">${day}<span class="dot"></span></button>`;
   }
-  const rem = (firstDow+daysInMonth)%7===0 ? 0 : 7-(firstDow+daysInMonth)%7;
+  const rem=(firstDow+daysInMonth)%7===0?0:7-(firstDow+daysInMonth)%7;
   for(let i=1;i<=rem;i++) html+=`<button class="cal-day other-month" onclick="selectDay(${calYear},${calMonth+1},${i})">${i}<span class="dot"></span></button>`;
   grid.innerHTML=html;
 }
 
-window.changeMonth = function(dir){
-  calMonth+=dir;
-  if(calMonth>11){calMonth=0;calYear++;}
-  if(calMonth<0){calMonth=11;calYear--;}
-  renderCalendar();
-};
-window.selectDay = function(y,m,d){
-  const dt=new Date(y,m,d);
-  calYear=dt.getFullYear(); calMonth=dt.getMonth();
-  selDate=dt.toISOString().split('T')[0];
-  renderCalendar(); renderDayTasks();
-};
+window.changeMonth=function(dir){ calMonth+=dir; if(calMonth>11){calMonth=0;calYear++;} if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); };
+window.selectDay=function(y,m,d){ const dt=new Date(y,m,d); calYear=dt.getFullYear(); calMonth=dt.getMonth(); selDate=dt.toISOString().split('T')[0]; renderCalendar(); renderDayTasks(); };
 
 function renderDayTasks(){
-  const hdr=document.getElementById('day-header');
-  const list=document.getElementById('day-task-list');
+  const hdr=document.getElementById('day-header'),list=document.getElementById('day-task-list');
   if(!selDate){hdr.innerHTML='';list.innerHTML='';return;}
   const [,m,d]=selDate.split('-');
-  const label=selDate===todayStr()?'今日':`${parseInt(m)}月${parseInt(d)}日`;
-  hdr.innerHTML=`<span>${label}</span>のタスク`;
+  hdr.innerHTML=`<span>${selDate===todayStr()?'今日':`${parseInt(m)}月${parseInt(d)}日`}</span>のタスク`;
   const dt=tasks.filter(t=>t.date===selDate);
   if(!dt.length){list.innerHTML=`<div class="empty"><div class="empty-ic">📭</div><div class="empty-tx">この日のタスクなし</div></div>`;return;}
   list.innerHTML=[...dt].sort((a,b)=>(b.mission?1:0)-(a.mission?1:0)).map(taskCardHTML).join('');
 }
 
 function renderTaskList(){
-  const today=todayStr();
-  const ms=tasks.filter(t=>t.mission&&t.date===today&&!t.done&&!t.penalized);
+  const today=todayStr(), ms=tasks.filter(t=>t.mission&&t.date===today&&!t.done&&!t.penalized);
   const banner=document.getElementById('mission-banner');
-  if(ms.length){
-    const m=ms[0];
-    banner.innerHTML=`<div class="miss-strip"><div class="miss-strip-icon">🔥</div><div class="miss-strip-body"><div class="miss-strip-title">${esc(m.name)}</div><div class="miss-strip-sub">${m.time?`⏰ ${m.time}まで`:' 今日中に！'} 未完了で -${m.penalty||20}pt</div></div><div class="miss-penalty">${ms.length}件</div></div>`;
-  } else banner.innerHTML='';
-
+  if(ms.length){const m=ms[0];banner.innerHTML=`<div class="miss-strip"><div class="miss-strip-icon">🔥</div><div class="miss-strip-body"><div class="miss-strip-title">${esc(m.name)}</div><div class="miss-strip-sub">${m.time?`⏰ ${m.time}まで`:' 今日中に！'} 未完了で -${m.penalty||20}pt</div></div><div class="miss-penalty">${ms.length}件</div></div>`;}
+  else banner.innerHTML='';
   const cfRow=document.getElementById('cat-filter');
   const allOn=filterCat==='all';
-  cfRow.innerHTML=`<button class="cat-btn ${allOn?'on':''}" style="${allOn?'background:#7c5cfc;color:#fff;':''}" onclick="setFilter('all')">すべて</button>`
-    +CATS.map(c=>{const on=filterCat===c.id;return`<button class="cat-btn ${on?'on':''}" style="${on?`background:${c.color};color:#fff;`:''}" onclick="setFilter('${c.id}')">${c.emoji} ${c.label}</button>`;}).join('');
-
+  cfRow.innerHTML=`<button class="cat-btn ${allOn?'on':''}" style="${allOn?'background:#7c5cfc;color:#fff;':''}" onclick="setFilter('all')">すべて</button>`+CATS.map(c=>{const on=filterCat===c.id;return`<button class="cat-btn ${on?'on':''}" style="${on?`background:${c.color};color:#fff;`:''}" onclick="setFilter('${c.id}')">${c.emoji} ${c.label}</button>`;}).join('');
   const list=document.getElementById('task-list');
   const pending=tasks.filter(t=>!t.done&&(filterCat==='all'||t.cat===filterCat));
   if(!pending.length){list.innerHTML=`<div class="empty"><div class="empty-ic">🎉</div><div class="empty-tx">全部できた！すごい！</div></div>`;return;}
@@ -460,65 +456,43 @@ function renderTaskList(){
 }
 
 function taskCardHTML(t){
-  const cat=getCat(t.cat);
-  const today=todayStr();
-  const overdue=t.date&&t.date<today&&!t.done;
-  let dateLbl='';
-  if(t.date) dateLbl=overdue?`<span class="badge-date od">⚠️ ${t.date}</span>`:t.date===today?`<span class="badge-date">📅 今日</span>`:`<span class="badge-date">📅 ${t.date}</span>`;
+  const cat=getCat(t.cat),today=todayStr(),overdue=t.date&&t.date<today&&!t.done;
+  let dateLbl=t.date?(overdue?`<span class="badge-date od">⚠️ ${t.date}</span>`:t.date===today?`<span class="badge-date">📅 今日</span>`:`<span class="badge-date">📅 ${t.date}</span>`):'';
   const timeLbl=(t.mission&&t.time)?`<span class="miss-time">⏰ ${t.time}まで</span>`:'';
   const missBadge=t.mission?`<span class="badge badge-miss">🔥ミッション</span>`:'';
   const penBadge=t.penalized?`<span class="badge" style="background:#ccc">ペナルティ済</span>`:'';
-  let cls='tc';
-  if(t.done) cls+=' done';
-  if(t.mission&&!t.done) cls+=' mission-card';
-  if(overdue&&!t.done) cls+=' overdue-card';
-  return `<div class="${cls}">
-    <button class="chk ${t.done?'on':''}" onclick="toggleTask('${t.id}')">${t.done?'✓':''}</button>
-    <div class="tc-body">
-      <div class="tc-name">${esc(t.name)}</div>
-      <div class="tc-meta"><span class="badge" style="background:${cat.color}">${cat.emoji} ${cat.label}</span>${missBadge}${penBadge}${dateLbl}${timeLbl}<span class="badge-pt">+${t.pts}pt</span></div>
-    </div>
-    <button class="del-btn" onclick="delTask('${t.id}')">🗑</button>
-  </div>`;
+  let cls='tc'; if(t.done) cls+=' done'; if(t.mission&&!t.done) cls+=' mission-card'; if(overdue&&!t.done) cls+=' overdue-card';
+  return `<div class="${cls}"><button class="chk ${t.done?'on':''}" onclick="toggleTask('${t.id}')">${t.done?'✓':''}</button><div class="tc-body"><div class="tc-name">${esc(t.name)}</div><div class="tc-meta"><span class="badge" style="background:${cat.color}">${cat.emoji} ${cat.label}</span>${missBadge}${penBadge}${dateLbl}${timeLbl}<span class="badge-pt">+${t.pts}pt</span></div></div><button class="del-btn" onclick="delTask('${t.id}')">🗑</button></div>`;
 }
 
 function renderPoints(){
   document.getElementById('hpt').textContent=points;
   document.getElementById('pts-big-num').textContent=points;
-  document.getElementById('reward-list').innerHTML=REWARDS.map(r=>`
-    <div class="rwd-card">
-      <div class="rwd-ic">${r.icon}</div>
-      <div class="rwd-info"><div class="rwd-name">${r.name}</div><div class="rwd-cost">🪙 ${r.cost}pt</div></div>
-      <button class="rwd-btn" onclick="claim('${r.id}',${r.cost},'${r.name}')" ${points<r.cost?'disabled':''}>こうかん</button>
-    </div>`).join('');
+  document.getElementById('reward-list').innerHTML=REWARDS.map(r=>`<div class="rwd-card"><div class="rwd-ic">${r.icon}</div><div class="rwd-info"><div class="rwd-name">${r.name}</div><div class="rwd-cost">🪙 ${r.cost}pt</div></div><button class="rwd-btn" onclick="claim('${r.id}',${r.cost},'${r.name}')" ${points<r.cost?'disabled':''}>こうかん</button></div>`).join('');
 }
 
-// ───── ACTIONS ─────
-window.toggleTask = async function(id){
+window.toggleTask=async function(id){
+  if(!currentUser) return;
   const t=tasks.find(t=>t.id===id); if(!t) return;
   const newDone=!t.done;
-  await updateDoc(doc(db,'tasks',id),{done:newDone});
-  const newPts=newDone ? points+t.pts : Math.max(0,points-t.pts);
-  await setDoc(doc(db,'meta','points'),{value:newPts});
+  await updateDoc(doc(db,'users',currentUser.uid,'tasks',id),{done:newDone});
+  await setDoc(doc(db,'users',currentUser.uid,'meta','points'),{value:newDone?points+t.pts:Math.max(0,points-t.pts)});
   toast(newDone?`+${t.pts}pt ゲット！🎉`:'未完了に戻したよ');
 };
-
-window.delTask = async function(id){
+window.delTask=async function(id){
+  if(!currentUser) return;
   if(!confirm('このタスクを削除する？')) return;
-  await deleteDoc(doc(db,'tasks',id));
+  await deleteDoc(doc(db,'users',currentUser.uid,'tasks',id));
   toast('削除したよ🗑');
 };
-
-window.claim = async function(id,cost,name){
-  if(points<cost) return;
-  await setDoc(doc(db,'meta','points'),{value:points-cost});
+window.claim=async function(id,cost,name){
+  if(!currentUser||points<cost) return;
+  await setDoc(doc(db,'users',currentUser.uid,'meta','points'),{value:points-cost});
   toast(`「${name}」とこうかんしたよ🎊`);
 };
+window.setFilter=function(cat){ filterCat=cat; renderTaskList(); };
 
-window.setFilter = function(cat){ filterCat=cat; renderTaskList(); };
-
-// ───── MODAL ─────
-window.openModal = function(){
+window.openModal=function(){
   document.getElementById('inp-name').value='';
   document.getElementById('inp-date').value=selDate||todayStr();
   document.getElementById('inp-pts').value=10;
@@ -528,59 +502,43 @@ window.openModal = function(){
   document.getElementById('add-overlay').classList.add('open');
   setTimeout(()=>document.getElementById('inp-name').focus(),300);
 };
-window.closeOverlayOut = function(e,id){ if(e.target.id===id) document.getElementById(id).classList.remove('open'); };
-window.toggleMission = function(){ isMission=!isMission; updateMissionToggle(); };
+window.closeOverlayOut=function(e,id){ if(e.target.id===id) document.getElementById(id).classList.remove('open'); };
+window.toggleMission=function(){ isMission=!isMission; updateMissionToggle(); };
 function updateMissionToggle(){
   document.getElementById('miss-toggle').classList.toggle('on',isMission);
   document.getElementById('miss-fields').style.display=isMission?'block':'none';
 }
 function renderCatSel(){
-  document.getElementById('cat-sel').innerHTML=CATS.map(c=>{
-    const on=selectedCat===c.id;
-    return`<button class="cs-btn ${on?'on':''}" style="${on?`background:${c.color};`:''}" onclick="selCat('${c.id}')">${c.emoji} ${c.label}</button>`;
-  }).join('');
+  document.getElementById('cat-sel').innerHTML=CATS.map(c=>{const on=selectedCat===c.id;return`<button class="cs-btn ${on?'on':''}" style="${on?`background:${c.color};`:''}" onclick="selCat('${c.id}')">${c.emoji} ${c.label}</button>`;}).join('');
 }
-window.selCat = function(id){ selectedCat=id; renderCatSel(); };
-
-window.addTask = async function(){
+window.selCat=function(id){ selectedCat=id; renderCatSel(); };
+window.addTask=async function(){
+  if(!currentUser) return;
   const name=document.getElementById('inp-name').value.trim();
   if(!name){toast('タスク名を入力してね！','bad');return;}
-  const t={
-    name, cat:selectedCat,
-    date:document.getElementById('inp-date').value,
-    pts:parseInt(document.getElementById('inp-pts').value)||10,
-    mission:isMission, done:false, penalized:false,
-    createdAt:Date.now()
-  };
-  if(isMission){
-    t.time=document.getElementById('inp-time').value||null;
-    t.penalty=parseInt(document.getElementById('inp-pen').value)||20;
-  }
-  await addDoc(collection(db,'tasks'),t);
+  const t={name,cat:selectedCat,date:document.getElementById('inp-date').value,pts:parseInt(document.getElementById('inp-pts').value)||10,mission:isMission,done:false,penalized:false,createdAt:Date.now()};
+  if(isMission){t.time=document.getElementById('inp-time').value||null;t.penalty=parseInt(document.getElementById('inp-pen').value)||20;}
+  await addDoc(collection(db,'users',currentUser.uid,'tasks'),t);
   if(t.date) selDate=t.date;
   document.getElementById('add-overlay').classList.remove('open');
   toast('タスクを追加したよ📝');
 };
 
-// ───── TABS ─────
-window.showTab = function(tab){
+window.showTab=function(tab){
   document.querySelectorAll('.tab').forEach((el,i)=>el.classList.toggle('active',['cal','tasks','points'][i]===tab));
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
   document.getElementById('page-'+tab).classList.add('active');
 };
 
-// ───── TOAST ─────
 function toast(msg,type=''){
   const el=document.getElementById('toast');
   el.textContent=msg; el.className='toast show'+(type?' '+type:'');
   clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),2400);
 }
 
-// ───── INIT ─────
 const now=new Date();
 calYear=now.getFullYear(); calMonth=now.getMonth(); selDate=todayStr();
-setInterval(()=>{ checkPenalties(); renderAll(); },60000);
-
+setInterval(()=>{ if(currentUser){ checkPenalties(); renderAll(); } },60000);
 </script>
 </body>
 </html>
