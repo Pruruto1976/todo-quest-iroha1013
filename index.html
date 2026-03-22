@@ -255,7 +255,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
 import { getFirestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-firestore.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBWgmu91yK_2SxMmb2vvzGSn97NXou93g8",
@@ -319,10 +319,14 @@ window.loginWithGoogle = async function(){
   document.getElementById('login-loading').style.display = 'block';
   try {
     await signInWithPopup(auth, new GoogleAuthProvider());
-  } catch(e){
-    document.getElementById('login-err').textContent = 'ログインに失敗しました';
-    document.getElementById('login-loading').style.display = 'none';
-    document.getElementById('login-btn').style.display = 'flex';
+  } catch(popupError) {
+    try {
+      await signInWithRedirect(auth, new GoogleAuthProvider());
+    } catch(e){
+      document.getElementById('login-err').textContent = 'ログインに失敗しました';
+      document.getElementById('login-loading').style.display = 'none';
+      document.getElementById('login-btn').style.display = 'flex';
+    }
   }
 };
 
