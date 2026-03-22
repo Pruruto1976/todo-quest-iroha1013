@@ -310,7 +310,7 @@ let selectedCat='study', isMission=false, filterCat='all';
 let penaltyQueue=[], currentUser=null;
 let unsubTasks=null, unsubPoints=null;
 
-function todayStr(){ return new Date().toISOString().split('T')[0]; }
+function todayStr(){ const d=new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
 function getCat(id){ return CATS.find(c=>c.id===id)||CATS[4]; }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
@@ -436,7 +436,7 @@ function renderCalendar(){
 }
 
 window.changeMonth=function(dir){ calMonth+=dir; if(calMonth>11){calMonth=0;calYear++;} if(calMonth<0){calMonth=11;calYear--;} renderCalendar(); };
-window.selectDay=function(y,m,d){ const dt=new Date(y,m,d); calYear=dt.getFullYear(); calMonth=dt.getMonth(); selDate=dt.toISOString().split('T')[0]; renderCalendar(); renderDayTasks(); };
+window.selectDay=function(y,m,d){ const dt=new Date(y,m,d); calYear=dt.getFullYear(); calMonth=dt.getMonth(); selDate=`${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`; renderCalendar(); renderDayTasks(); };
 
 function renderDayTasks(){
   const hdr=document.getElementById('day-header'),list=document.getElementById('day-task-list');
